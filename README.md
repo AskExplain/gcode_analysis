@@ -1,5 +1,5 @@
 # gcode_analysis
-An analysis of Spatial Transcriptomics with Generative Encoders
+An analysis of multimodal data with Generative Encoders
 
 The Generative Encoder (in development) can be found here:
 https://github.com/AskExplain/gcode
