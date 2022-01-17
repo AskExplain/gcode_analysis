@@ -85,26 +85,8 @@ for (id in breast_cancer_ids){
   
   histo_main_matrix <- histo_pixel_matrix%*%t(gcode.all.models$gcode.non_tumour$main.parameters$beta[[1]])
 
+  colnames(histo_main_matrix) <- gene_consensus$hgnc_symbol
   
-  if (id == breast_cancer_ids[1]){
-  
-  library(biomaRt)
-  mart <- useMart(biomart = "ensembl", dataset = "hsapiens_gene_ensembl")
-  
-  IDs <- getBM(attributes = c("ensembl_gene_id","hgnc_symbol"),
-               filters = "ensembl_gene_id", values = colnames(histo_main_matrix),
-               mart = mart)
-  
-  gene_consensus <- IDs
-  }
-  
-  
-  colnames(histo_main_matrix) <- gene_consensus$hgnc_symbol[which(colnames(histo_main_matrix)%in%gene_consensus$ensembl_gene_id)]
-  
-  std.dev_list <- do.call('c',pbmcapply::pbmclapply(c(1:dim(histo_main_matrix)[2]),function(X){sd(histo_main_matrix[,X])},mc.cores = 8))
-  std.dev_threshold <- quantile(std.dev_list,0.99)
-  print(std.dev_threshold)
-    
   # gene_consensus$hgnc_symbol[grep(x = gene_consensus$hgnc_symbol,pattern = "TNFS")]
   
   g_list <- list()
@@ -117,7 +99,7 @@ for (id in breast_cancer_ids){
                              "BGN","ACTG1","AEBP1")){
     print(gene_of_interest)
     g <- melt(as.matrix(as.im((apply(t(matrix(((histo_main_matrix[,gene_of_interest])),nrow=dimensions_final[2]/step-1,ncol=dimensions_final[3]/step-1,byrow = T)),2,rev)))))
-    g$value <- convert_to_HEAT(scale(g$value,scale = F))
+    g$value <- convert_to_HEAT(scale(g$value))
     heatmap_p <- ggplot2::ggplot(data=g, aes(x=Var2, y=Var1, fill=value))+ 
       geom_tile(color="white") +
       scale_fill_gradient2(low = "white", high = "red",midpoint=0,limit = c(-1,1)) +
@@ -152,9 +134,8 @@ for (id in breast_cancer_ids){
     layout_matrix = lm
   )
   
-  plot(g_plots)
 
-  ggsave(filename = paste("./figures/explore/test_heatmap_he_et_al/",id,"___he_et_al_ST_breast_tissue.jpeg",sep=""),plot = g_plots, width = 30,height = 30)
+  ggsave(filename = paste("./figures/explore/heatmap_he_et_al/",id,"___he_et_al_ST_breast_tissue.png",sep=""),plot = g_plots, width = 30,height = 30)
   
 }
 

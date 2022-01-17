@@ -1,7 +1,3 @@
-### GTEX v8 Annotation file
-# Data downloaded at https://storage.googleapis.com/gtex_analysis_v8/annotations/GTEx_Analysis_v8_Annotations_SampleAttributesDS.txt
-###
-
 
 setwd("~/Documents/main_files/AskExplain/generative_encoder/")
 load("./data/workflow/breast_visium.RData")
