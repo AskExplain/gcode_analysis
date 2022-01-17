@@ -1,4 +1,4 @@
-# gcode_analysis
+# Generative Encoding analysis
 An analysis of multimodal data with Generative Encoders
 
 The Generative Encoder (in development) can be found here:
