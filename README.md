@@ -1,6 +1,9 @@
 # Generative Encoding analysis
 An analysis of multimodal data with Generative Encoders
 
+The bioRXiv pre-print can be found here:
+https://www.biorxiv.org/content/10.1101/2021.07.09.451779v2
+
 The Generative Encoder (in development) can be found here:
 https://github.com/AskExplain/gcode
 
