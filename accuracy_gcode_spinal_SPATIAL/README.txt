@@ -3,5 +3,5 @@
 
 ######## Spatial Transcriptomics dataset
 # Data downloaded at 
-# https://data.mendeley.com/datasets/3bs5f8mvbs/1 and put in a file at ./data/external/adipocyte/
+# https://als-st.nygenome.org/ and put in a file at ./data/external/spinal/
 ########

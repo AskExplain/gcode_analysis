@@ -3,5 +3,5 @@
 
 ######## Spatial Transcriptomics dataset
 # Data downloaded at 
-# https://data.mendeley.com/datasets/3bs5f8mvbs/1 and put in a file at ./data/external/adipocyte/
+# https://www.spatialresearch.org/resources-published-datasets/doi-10-1016-j-cell-2019-11-025/  and put in a file at ./data/external/fetal_heart/
 ########
