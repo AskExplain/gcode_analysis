@@ -1,12 +1,10 @@
+setwd("~/Documents/main_files/AskExplain/generative_encoder/")
 
-load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/adipose/gene_consensus.RData")
-load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/adipose/adipose_visium_GE_data.RData")
-load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/adipose/ADIPOSE_data_pixel.RData")
+load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/spinal/gene_consensus.RData")
+load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/spinal/spinal_visium_GE_data.RData")
 
-row.names(ADIPOSE_data_pixel) <- row.names(ADIPOSE_data$gex)
 
-data_list <- list(GEX=as.matrix(ADIPOSE_data$gex),PIXEL_TRAIN=ADIPOSE_data_pixel)
-
+data_list <- spinal_data
 
 
 for (dim_all in c(5)){
@@ -17,7 +15,6 @@ for (dim_all in c(5)){
   config$transform$norm <- F
   config$i_dim <- dim_all
   config$j_dim <- dim_all
-  config$k_dim <- dim_all*2
   config$tol <- 1
   config$regularise$a <- 0
   config$regularise$l <- 0
@@ -58,5 +55,5 @@ for (dim_all in c(5)){
   
   gcode.all.models <- list(gcode.non_tumour=list(gcode.non_tumour))
   
-  save(gcode.all.models,file=paste(paste("./data/workflow/adipose/gcode___adipose.",dim_all,".all.models.Rdata",sep="")))
+  save(gcode.all.models,file=paste(paste("./data/workflow/spinal/gcode___spinal.",dim_all,".all.models.Rdata",sep="")))
 }

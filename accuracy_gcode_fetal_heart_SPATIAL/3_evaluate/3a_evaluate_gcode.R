@@ -1,7 +1,7 @@
-load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/adipose/gene_consensus.RData")
-load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/adipose/adipose_test.RData")
+load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/fetal_heart/gene_consensus.RData")
+load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/fetal_heart/fetal_heart_test.RData")
 
-load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/adipose/gcode___adipose.5.all.models.Rdata")
+load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/fetal_heart/gcode___fetal_heart.5.all.models.Rdata")
 
 a0 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$beta[[1]]
 b0 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$beta[[2]]
@@ -9,9 +9,9 @@ a1 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$intercept[[1]]
 b1 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$intercept[[2]]
 
 main_metrics <- c()
-predicted_gex <- (do.call('rbind',(ADIPOSE_test$pixel)) - c(b1))%*%b0%*%t(a0)+c(a1)
+predicted_gex <- (do.call('rbind',(fetal_heart_test$pixel))-c(b1))%*%b0%*%t(a0)+c(a1)
 
-observed_gex <- Matrix::t(do.call('cbind',(ADIPOSE_test$gex)))
+observed_gex <- do.call('rbind',(fetal_heart_test$gex))
 row.names(predicted_gex) <- row.names(observed_gex)
 
 gene_main_metrics <- rbind(main_metrics,do.call('rbind',pbmcapply::pbmclapply(c(1:dim(observed_gex)[2]),function(id){
@@ -33,8 +33,7 @@ samples_main_metrics <- rbind(main_metrics,do.call('rbind',pbmcapply::pbmclapply
 
 
 if (plotting){
-
-  X=1  
+  X=1
   par(mfcol=c(2,2))
   boxplot(unlist(samples_main_metrics[,1]),ylim=c(-1,1),main=median(unlist(samples_main_metrics[,1]),na.rm = T),xlab=X)
   boxplot(unlist(samples_main_metrics[,2]),main=median(unlist(samples_main_metrics[,2]),na.rm = T),xlab=X)
@@ -42,13 +41,8 @@ if (plotting){
   boxplot(unlist(gene_main_metrics[,1]),ylim=c(-1,1),main=median(unlist(gene_main_metrics[,1]),na.rm = T),xlab=X)
   boxplot(unlist(gene_main_metrics[,2]),main=median(unlist(gene_main_metrics[,2]),na.rm = T),xlab=X)
   
-  
-  
   print(quantile(unlist(samples_main_metrics[,1]),c(0:20)/20))
   print(quantile(unlist(gene_main_metrics[,1]),c(0:20)/20,na.rm = T))
-  
-  
-  
   
   for (i in order(unlist(gene_main_metrics[,1]),decreasing = T)[1:10]){
     plot(observed_gex[,i],predicted_gex[,i])
