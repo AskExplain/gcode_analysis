@@ -1,12 +1,13 @@
+setwd("~/Documents/main_files/AskExplain/generative_encoder/")
 
-load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/adipose/gene_consensus.RData")
-load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/adipose/adipose_visium_GE_data.RData")
-load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/adipose/ADIPOSE_data_pixel.RData")
 
-row.names(ADIPOSE_data_pixel) <- row.names(ADIPOSE_data$gex)
+load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/fetal_heart/gene_consensus.RData")
+load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/fetal_heart/fetal_heart_visium_GE_data.RData")
+load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/fetal_heart/fetal_heart_data_pixel.RData")
 
-data_list <- list(GEX=as.matrix(ADIPOSE_data$gex),PIXEL_TRAIN=ADIPOSE_data_pixel)
+row.names(fetal_heart_data_pixel) <- row.names(fetal_heart_data$gex)
 
+data_list <- list(GEX=as.matrix(fetal_heart_data$gex),PIXEL_TRAIN=fetal_heart_data_pixel)
 
 
 for (dim_all in c(5)){
@@ -17,7 +18,6 @@ for (dim_all in c(5)){
   config$transform$norm <- F
   config$i_dim <- dim_all
   config$j_dim <- dim_all
-  config$k_dim <- dim_all*2
   config$tol <- 1
   config$regularise$a <- 0
   config$regularise$l <- 0
@@ -51,6 +51,7 @@ for (dim_all in c(5)){
   labels = list(alpha=NULL,
                 beta=NULL))
   
+  
   references <- gcode::extract_references_framework(F)
   references$data_list <- c(1,0)
   
@@ -58,5 +59,5 @@ for (dim_all in c(5)){
   
   gcode.all.models <- list(gcode.non_tumour=list(gcode.non_tumour))
   
-  save(gcode.all.models,file=paste(paste("./data/workflow/adipose/gcode___adipose.",dim_all,".all.models.Rdata",sep="")))
+  save(gcode.all.models,file=paste(paste("./data/workflow/fetal_heart/gcode___fetal_heart.",dim_all,".all.models.Rdata",sep="")))
 }

@@ -1,15 +1,17 @@
 setwd("~/Documents/main_files/AskExplain/generative_encoder/")
 
-load("./data/workflow/gene_consensus.RData")
-load("./data/workflow/BREAST_test.RData")
+load("./data/workflow/breast/gene_consensus.RData")
+load("./data/workflow/breast/BREAST_test.RData")
 
-load("./data/workflow/gcode___all.models.Rdata")
+load("./data/workflow/breast/gcode___breast.5.all.models.Rdata")
 
 a0 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$beta[[1]]
 b0 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$beta[[2]]
+a1 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$intercept[[1]]
+b1 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$intercept[[2]]
 
 main_metrics <- c()
-predicted_gex <- test_data_list$PIXEL_TRAIN%*%b0%*%t(sign(median(a0[a0!=0])*median(b0[b0!=0]))*a0)
+predicted_gex <- (test_data_list$PIXEL_TRAIN-c(b1))%*%b0%*%t(a0)+c(a1)
 
 observed_gex <- (test_data_list$GEX)
 row.names(predicted_gex) <- row.names(observed_gex)
@@ -35,6 +37,7 @@ samples_main_metrics <- rbind(main_metrics,do.call('rbind',pbmcapply::pbmclapply
 
 
 if (plotting){
+  X=1
   par(mfcol=c(2,2))
   boxplot(unlist(samples_main_metrics[,1]),ylim=c(-1,1),main=median(unlist(samples_main_metrics[,1]),na.rm = T),xlab=X)
   boxplot(unlist(samples_main_metrics[,2]),main=median(unlist(samples_main_metrics[,2]),na.rm = T),xlab=X)
