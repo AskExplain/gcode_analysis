@@ -44,13 +44,14 @@ for (dim_all in c(5)){
                                alpha = c(1,1),
                                beta = c(1,2),
                                code = c(1,1)
-  ),
+                               ),
   labels = list(alpha=NULL,
                 beta=NULL))
   
   references <- gcode::extract_references_framework(F)
-  references$data_list <- c(1,0)
+  references$data_list <- c(0,1)
   
+  set.seed(1)
   gcode.non_tumour <- gcode::gcode(data_list = data_list, config = config, join = join, references = references)
   
   gcode.all.models <- list(gcode.non_tumour=list(gcode.non_tumour))

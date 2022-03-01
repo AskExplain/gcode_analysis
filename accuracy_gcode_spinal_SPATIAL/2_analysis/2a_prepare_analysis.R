@@ -4,7 +4,7 @@ load("./data/workflow/spinal/spinal_test.RData")
 
 gene_ids <- lapply(c(spinal_train$gex,spinal_test$gex),colnames)
 gene_ids <- lapply(which(!do.call('c',lapply(gene_ids,is.null))),function(X){gene_ids[[X]]})
-gene_ids <- lapply(which(do.call('c',lapply(gene_ids,function(X){X[1]=="Gnai3"}))),function(X){gene_ids[[X]]})
+gene_ids <- lapply(which(!do.call('c',lapply(gene_ids,function(X){X[1]=="TSPAN6"}))),function(X){gene_ids[[X]]})
 gene_consensus <- Reduce("intersect",gene_ids)
 save(gene_consensus,file = "./data/workflow/spinal/gene_consensus.RData")
 
@@ -35,6 +35,7 @@ save(spinal_data,file = "~/Documents/main_files/AskExplain/generative_encoder/da
 rm(spinal_data,spinal_train);gc()
 
 
+load("~/Documents/main_files/AskExplain/generative_encoder/data/workflow/spinal/gene_consensus.RData")
 
 spinal_data_test <- list(gex=NULL,pixel=NULL)
 spinal_data_test$gex <- do.call('rbind',lapply(c(1:length(spinal_test$gex)),function(X){
@@ -56,3 +57,4 @@ spinal_data_test$pixel <- do.call('rbind',lapply(c(1:length(spinal_test$gex)),fu
 }))
 
 save(spinal_data_test,file = "~/Documents/main_files/AskExplain/generative_encoder/data/workflow/spinal/spinal_visium_GE_data_test.Rdata")
+

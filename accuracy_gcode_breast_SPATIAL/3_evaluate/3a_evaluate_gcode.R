@@ -5,31 +5,33 @@ load("./data/workflow/breast/BREAST_test.RData")
 
 load("./data/workflow/breast/gcode___breast.5.all.models.Rdata")
 
-a0 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$beta[[1]]
-b0 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$beta[[2]]
-a1 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$intercept[[1]]
-b1 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$intercept[[2]]
+library(lsa)
+
+fa0 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$beta[[1]]
+fb0 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$beta[[2]]
+fi0 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$intercept[[2]]
+fi1 <- gcode.all.models$gcode.non_tumour[[1]]$main.parameters$intercept[[1]]
+fc <- gcode.all.models$gcode.non_tumour[[1]]$main.code$code[[1]]
 
 main_metrics <- c()
-predicted_gex <- (test_data_list$PIXEL_TRAIN-c(b1))%*%b0%*%t(a0)+c(a1)
+predicted_gex.alpha <- as.matrix((test_data_list$PIXEL_TRAIN) - c(fi0))%*%fb0%*%t(fc)%*%MASS::ginv(fc%*%t(fc))
+predicted_gex <- predicted_gex.alpha%*%fc%*%t(fa0)+c(fi1)
 
 observed_gex <- (test_data_list$GEX)
 row.names(predicted_gex) <- row.names(observed_gex)
 
 gene_main_metrics <- rbind(main_metrics,do.call('rbind',pbmcapply::pbmclapply(c(1:dim(observed_gex)[2]),function(id){
   
-  ids_keep <- which(observed_gex[,id]!=0)
-  main_cor <- c(cor(as.numeric(observed_gex[ids_keep,id]),as.numeric(predicted_gex[ids_keep,id])))
-  main_mae <- c(mean(abs(as.numeric(observed_gex[ids_keep,id])-as.numeric(predicted_gex[ids_keep,id]))))
+  main_cor <- c(cosine(as.numeric(observed_gex[,id]),as.numeric(predicted_gex[,id])))
+  main_mae <- c(mean(abs(as.numeric(observed_gex[,id])-as.numeric(predicted_gex[,id]))))
   
   list(main_cor = main_cor,main_mae = main_mae)
 },mc.cores = 8)))
 
 samples_main_metrics <- rbind(main_metrics,do.call('rbind',pbmcapply::pbmclapply(c(1:dim(observed_gex)[1]),function(id){
   
-  ids_keep <- which(observed_gex[id,]!=0)
-  main_cor <- c(cor(as.numeric(observed_gex[id,ids_keep]),as.numeric(predicted_gex[id,ids_keep])))
-  main_mae <- c(mean(abs(as.numeric(observed_gex[id,ids_keep])-as.numeric(predicted_gex[id,ids_keep]))))
+  main_cor <- c(cosine(as.numeric(observed_gex[id,]),as.numeric(predicted_gex[id,])))
+  main_mae <- c(mean(abs(as.numeric(observed_gex[id,])-as.numeric(predicted_gex[id,]))))
   
   list(main_cor = main_cor,main_mae = main_mae)
 },mc.cores = 8)))

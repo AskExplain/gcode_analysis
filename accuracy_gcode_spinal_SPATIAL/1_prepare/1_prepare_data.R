@@ -17,14 +17,14 @@ extract_pixels <- function(image,coords){
     cropped_image <- magick::image_crop(image = image, geometry = paste("64x64+",X,"+",Y,sep=""))
     coord_pixels <- c(as.numeric(magick::image_data(cropped_image, 'rgb')))
     
-  },mc.cores = 8))
+  },mc.cores = 6))
   
   return(coord_pixels) 
 }
 
 set.seed(1)
-train_IDS <- sample(c(1:length(image_IDS)),length(image_IDS)*0.6)
-test_IDS <- c(1:length(image_IDS))[-train_IDS]
+train_IDS <- sample(c(1:length(image_IDS)),length(image_IDS)*0.35)
+test_IDS <- sample(c(1:length(image_IDS))[-train_IDS],100)
 
 
 spinal_test <- list(gex = list(NULL), pixel = list(NULL))
